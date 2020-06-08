@@ -1,1 +1,1 @@
-worker: python app/caesar.py
+worker: python caesar.py
