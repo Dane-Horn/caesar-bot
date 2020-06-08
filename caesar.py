@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 import os
 import random
 from customParser import Parser
-load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 
 bot = commands.Bot(command_prefix='/')
@@ -22,4 +21,4 @@ async def roll(ctx, *roll):
     except:
         result = 'Hell naw'
     await ctx.send(f'{ctx.author.mention} {result}')
-bot.run(token)
+bot.run('NzE4OTQxNzY4NDA5ODA4OTk3.XtwM7g.YlTMDA3zIQmAaMnR344DDqB1Auk')
