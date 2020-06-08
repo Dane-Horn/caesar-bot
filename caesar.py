@@ -21,4 +21,4 @@ async def roll(ctx, *roll):
     except:
         result = 'Hell naw'
     await ctx.send(f'{ctx.author.mention} {result}')
-bot.run('NzE4OTQxNzY4NDA5ODA4OTk3.XtwM7g.YlTMDA3zIQmAaMnR344DDqB1Auk')
+bot.run(token)
