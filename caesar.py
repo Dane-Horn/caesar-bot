@@ -7,7 +7,7 @@ from customParser import Parser
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 
-bot = commands.Bot(command_prefix='/')
+bot = commands.Bot(command_prefix='!')
 @bot.event
 async def on_ready():
     print(f'{bot.user.name} has come online!')
@@ -20,6 +20,6 @@ async def roll(ctx, *roll):
     try:
         result = Parser().parse(''.join(roll))
     except:
-        result = 'Hell naw'
+        result = 'Alea iacta est - non'
     await ctx.send(f'{ctx.author.mention} {result}')
 bot.run(token)
