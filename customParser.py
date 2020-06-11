@@ -44,26 +44,43 @@ class Parser():
         return value 
 
     def term(self):
-        value = self.factor()
+        value = self.term2()
         while self.isMulOp(self.c):
             op = self.c
             self.output += f'{op} '
             self.getNext()
-            secondValue = self.factor()
+            secondValue = self.term2()
             if op == '*':
                 value *= secondValue
             if op == '/':
                 value /= secondValue
         return value
+    def term2(self):
+        value = 1
+        if (self.c != 'd'):
+            value = self.factor()
+        if self.c == 'd':
+            self.output = self.output[:-1]
+            self.output += 'd'
+            self.getNext()
+            base = self.factor()
+            rolls = self.dice(value, base)
+            value = sum(rolls)
+            if len(rolls) > 1:
+                rolls_output = map(lambda roll: f'({roll})', rolls)
+                self.output += f'({" + ".join(list(rolls_output))} = {value}) '
+            else:
+                self.output += f'({rolls[0]})'
+        return value
 
     def factor(self):
-        if not self.c == 'd' and not self.c == '(' and not (self.isDigit(self.c) or self.c == '-'):
+        if not self.c == '(' and not (self.isDigit(self.c) or self.c == '-'):
             print('c: ', self.c)
             raise Exception('unexpected end')
         value = None
         if self.c == '(':
             value = self.bracket()
-        elif self.isDigit(self.c) or self.c == '-' or self.c == 'd':
+        elif self.isDigit(self.c) or self.c == '-':
             value = self.number()
         return value
     def isAddOp(self, c):
@@ -76,17 +93,11 @@ class Parser():
         return c in '0123456789'
 
     def number(self):
-        if self.c == 'd':
-            self.getNext()
-            return self.dice(1)
         value = ''
         while self.isDigit(self.c) or self.c == '-':
             value += self.c
             self.getNext()
         self.output += f'{value} '
-        if self.c == 'd':
-            self.getNext()
-            return self.dice(int(value))
         if value == '-':
             raise Exception('digit expected')
         return int(value)
@@ -105,17 +116,9 @@ class Parser():
         return value
 
     
-    def dice(self, num):
-        self.output = self.output[:-1]
-        self.output += 'd'
-        base = self.bracket() if self.c == '(' else self.number()
-        self.output = self.output[:-1]
+    def dice(self, num, base):
         rolls = [random.randint(1, base) for _ in range(num)]
-        value = sum(rolls)
-        self.output += '('
-        self.output += ' + '.join(map(lambda roll: f'({roll})', rolls))
-        self.output += f' = {value}) '
-        return value
+        return rolls
 
     def removeNumberFromDisplay(self):
         toRemove = 0
