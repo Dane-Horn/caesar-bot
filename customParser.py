@@ -82,7 +82,7 @@ class Parser():
             rolls, rolls_output = self.dice(num_rolls, base)
             value = max(rolls)
             self.output += f'({", ".join(rolls_output)} = {value}) '
-        if self.match(r'dis'):
+        elif self.match(r'dis'):
             self.output += 'dis'
             self.getNext(); self.getNext(); self.getNext()
             self.expect('(')
