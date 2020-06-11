@@ -11,13 +11,17 @@ class Parser():
             self.c = self.inpt[self.i]
         else:
             self.c = '\0'
-    def getNext(self):
+    def getNext(self, i=1):
         if self.c != '\0':
             self.i += 1
             self.updateC()
             while(self.c.isspace()):
                 self.updateC()
         return self.c
+    
+    def expect(self, char):
+        if self.c != char:
+            raise Exception(f'{char} expected')
 
     def parse(self, inpt):
         self.value = 0
@@ -28,6 +32,8 @@ class Parser():
         self.getNext()
         value = self.expression()
         self.output += f'= {value}'
+        if len(self.output) > 2000:
+            self.output = f'...output too long - truncated result = {value}'
         return self.output
 
     def expression(self):
@@ -55,22 +61,64 @@ class Parser():
             if op == '/':
                 value /= secondValue
         return value
+    
     def term2(self):
+        value = None
+        if self.match(r'adv'):
+            self.output += 'adv'
+            self.getNext(); self.getNext(); self.getNext()
+            self.expect('(')
+            self.getNext()
+            self.output += '('
+            num_rolls = self.term3()
+            self.expect(',')
+            self.getNext()
+            self.output += ', '
+            base = self.term3()
+            self.expect(')')
+            self.getNext()
+            self.output = self.output[:-1]
+            self.output += ') '
+            rolls, rolls_output = self.dice(num_rolls, base)
+            value = max(rolls)
+            self.output += f'({", ".join(rolls_output)} = {value}) '
+        if self.match(r'dis'):
+            self.output += 'dis'
+            self.getNext(); self.getNext(); self.getNext()
+            self.expect('(')
+            self.getNext()
+            self.output += '('
+            num_rolls = self.term3()
+            self.expect(',')
+            self.getNext()
+            self.output += ', '
+            base = self.term3()
+            self.expect(')')
+            self.getNext()
+            self.output = self.output[:-1]
+            self.output += ') '
+            rolls, rolls_output = self.dice(num_rolls, base)
+            value = min(rolls)
+            self.output += f'({", ".join(rolls_output)} = {value}) '
+        else:
+            value = self.term3()
+        return value
+    
+    def term3(self):
         value = 1
+        hasN = False
         if (self.c != 'd'):
+            hasN = True
             value = self.factor()
         if self.c == 'd':
-            self.output = self.output[:-1]
+            if hasN:
+                self.output = self.output[:-1]
             self.output += 'd'
             self.getNext()
             base = self.factor()
-            rolls = self.dice(value, base)
+            rolls, rolls_output = self.dice(value, base)
             value = sum(rolls)
-            if len(rolls) > 1:
-                rolls_output = map(lambda roll: f'({roll})', rolls)
-                self.output += f'({" + ".join(list(rolls_output))} = {value}) '
-            else:
-                self.output += f'({rolls[0]})'
+            self.output += f'({" + ".join(list(rolls_output))} = {value}) '
         return value
 
     def factor(self):
@@ -110,15 +158,16 @@ class Parser():
             raise Exception(') expected')
         self.output = self.output[:-1] + ') '
         self.getNext()
-        if self.c == 'd':
-            self.getNext()
-            value = self.dice(value)
         return value
 
     
     def dice(self, num, base):
         rolls = [random.randint(1, base) for _ in range(num)]
-        return rolls
+
+        rolls_output = iter(["(...)"])
+        if len(rolls) < 100:
+            rolls_output = map(lambda roll: f'({roll})', rolls)
+        return (rolls, rolls_output)
 
     def removeNumberFromDisplay(self):
         toRemove = 0
@@ -138,3 +187,8 @@ class Parser():
             if c == '(': count -= 1
             if count == 0: break
         self.output = self.output[:-toRemove]
+    
+    def match(self, pattern):
+        if re.match(pattern, self.inpt[self.i:]):
+            return True
+        return False
