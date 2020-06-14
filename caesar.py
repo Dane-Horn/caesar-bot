@@ -15,12 +15,24 @@ async def on_ready():
 @bot.command(name='r')
 async def roll(ctx, *roll):
     print(''.join(roll))
-    response = f'{ctx.author.mention} Rolling 1d6 = {random.randint(1, 6)}'
     result = ''
     try:
         result = Parser().parse(''.join(roll))
     except:
         result = 'Alea iacta est - non'
     await ctx.send(f'{ctx.author.mention} {result}')
+
+@bot.command(name = 'p')
+async def poke(ctx, n):
+    n = int(n)
+    rolls = [random.randint(1, 6) for _ in range(n)]
+    result = \
+f''' 
+Rolls: {' '.join(map(str, rolls))}    
+Successes: {len(list(filter(lambda r: r > 3, rolls)))}
+Failures: {len(list(filter(lambda r: r <= 3, rolls)))}
+'''
+    await ctx.send(f'{ctx.author.mention}\n{result}')
+
 bot.run(token)
 #comment
