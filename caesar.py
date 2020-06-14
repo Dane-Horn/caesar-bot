@@ -31,7 +31,7 @@ f'''
 Rolls: {' '.join(map(str, rolls))}    
 Successes: {len(list(filter(lambda r: r > 3, rolls)))}
 Failures: {len(list(filter(lambda r: r <= 3, rolls)))}
-'''
+'''[2:]
     await ctx.send(f'{ctx.author.mention}\n{result}')
 
 bot.run(token)
