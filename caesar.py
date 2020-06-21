@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import os
 import random
 from customParser import Parser
+from tokenizer import tokenize
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 
@@ -33,6 +34,11 @@ Successes: {len(list(filter(lambda r: r > 3, rolls)))}
 Failures: {len(list(filter(lambda r: r <= 3, rolls)))}
 '''[2:]
     await ctx.send(f'{ctx.author.mention}\n{result}')
+
+@bot.command(name='t')
+async def token(ctx, *s):
+    s = ''.join(s)
+    tokenize(s)
 
 bot.run(token)
 #comment

@@ -1,5 +1,22 @@
 import re
 import random
+from tokenizer import tokenize
+class tokenParser():
+    def expect(self, *types):
+        not_found = all(self.tokens[self.i].get(token_type, None) is None for token_type in types)
+        if not_found:
+            raise Exception(f'One of {types} expected, but {self.tokens[self.i]} found')
+        return True
+
+
+    def parse(self, s):
+        self.i = 0
+        self.tokens = tokenize(s)
+        self.expect('unknown', 'number')
+
+parser = tokenParser()
+result = parser.parse('dis+(dis(1+2)')
+
 class Parser():
     inpt = None
     c = ''
