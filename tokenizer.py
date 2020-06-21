@@ -17,5 +17,3 @@ def tokenize(s):
     matches = []
     matches = [{k: m[k] for k in m.groupdict() if m[k] is not None} for m in re.finditer(combined, s)]
     return matches
-
-tokenize('dis+dis2asd')
