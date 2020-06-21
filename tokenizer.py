@@ -13,14 +13,9 @@ tokens = {
 
 
 combined = re.compile('|'.join(tokens.values()))
-print(combined)
 def tokenize(s):
     matches = []
-    for m in re.finditer(combined, s):
-        match = {k: m[k] for k in m.groupdict() if m[k] is not None}
-        if len(match) == 0:
-            match = {'unknown': ''}
-        matches.append(match)
-    # matches = [{k: m[k] for k in m.groupdict() if m[k] is not None} for m in re.finditer(combined, s)]
-    print(matches)
+    matches = [{k: m[k] for k in m.groupdict() if m[k] is not None} for m in re.finditer(combined, s)]
     return matches
+
+tokenize('dis+dis2asd')
