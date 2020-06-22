@@ -9,7 +9,7 @@ default_tokens = {
     "lparen": r'\(',
     "rparen": r'\)',
     "comma": r',',
-    "unknown": r'.+?'
+    "unknown": r'\S+?'
 }
 
 def map_match(m):
