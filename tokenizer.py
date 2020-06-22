@@ -1,5 +1,4 @@
 import re
-
 default_tokens = {
     "number": r'\d+',
     "add_op": r'\+|-',
@@ -7,7 +6,8 @@ default_tokens = {
     "variable": r'\$[a-zA-Z]+',
     "function": r'dis|adv',
     "die": r'd',
-    "paren": r'\(|\)',
+    "lparen": r'\(',
+    "rparen": r'\)',
     "comma": r',',
     "unknown": r'.+?'
 }
