@@ -1,35 +1,5 @@
 import re
 import random
-from tokenizer import tokenize
-class tokenParser():
-    def expect(self, *types):
-        not_found = all(self.curr.get(token_type, None) is None for token_type in types)
-        if not_found:
-            raise Exception(f'One of {types} expected, but {self.curr} found')
-        return True
-
-    def is_curr(self, *types):
-        return any(self.curr.get(token_type, None) is not None for token_type in types)
-    def next(self):
-        self.i += 1
-
-    @property
-    def curr(self):
-        if self.i >= len(self.tokens):
-            return {'eof': '\0'}
-        else:
-            return self.tokens[self.i]
-
-    @property
-    def curr_value(self):
-        if self.i >= len(self.tokens):
-            return '\0'
-        else:
-            return next(iter(self.tokens[self.i].values()))
-    def parse(self, s):
-        self.i = 0
-        self.tokens = tokenize(s)
-
 class Parser():
     inpt = None
     c = ''
