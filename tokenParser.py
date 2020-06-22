@@ -10,6 +10,7 @@ mul_ops = {
     '/': lambda a, b: a / b
 }
 
+
 def disadvantage(state, out, rolls, base):
     rolls = [randint(1, base) for _ in range(rolls)]
     value = min(rolls)
@@ -23,6 +24,19 @@ def advantage(state, out, rolls, base):
 functions = {
     'dis': disadvantage,
     'adv': advantage
+}
+
+tokens = {
+    "number": r'\d+',
+    "add_op": r'\+|-',
+    "mul_op": r'\*|/',
+    "variable": r'\$[a-zA-Z]+',
+    "function": '|'.join(functions.keys()),
+    "die": r'd',
+    "lparen": r'\(',
+    "rparen": r'\)',
+    "comma": r',',
+    "unknown": r'\S+?'
 }
 
 def stringify_rolls(rolls):
@@ -61,7 +75,7 @@ def output(state, out, *strings):
 def parse(s):
     state = {
         "i": 0,
-        "tokens": tokenize(s),
+        "tokens": tokenize(s, tokens),
         "output": []
     }
     value = roll_expression(state)
