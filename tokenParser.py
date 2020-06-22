@@ -17,7 +17,6 @@ def curr(state):
     else:
         return state["tokens"][state["i"]]
 
-@property
 def curr_value(state):
     if state.i >= len(state["tokens"]):
         return '\0'
