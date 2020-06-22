@@ -28,3 +28,28 @@ def parse(s):
         "tokens": tokenize(s),
         "output": ""
     }
+
+def expression(state):
+    pass
+
+def func_term(state):
+    pass
+
+def add_term(state):
+    pass
+
+def mul_term(state):
+    pass
+
+def die_term(state):
+    pass
+
+def factor(state):
+    pass
+
+# expression = func_term eof
+# func_term  = function"("expression")"|add_term
+# add_term   = mul_term{add_op mul_term}
+# mul_term   = die_term{mul_op die_term}
+# die_term   = factor["d"factor]
+# factor     = "("expression")"|number|variable
