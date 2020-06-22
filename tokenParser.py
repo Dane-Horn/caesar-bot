@@ -1,52 +1,55 @@
 from tokenizer import tokenize
 
-def expect(state, *types):
-        not_found = all(curr(state).get(token_type, None) is None for token_type in types)
-        if not_found:
-            raise Exception(f'One of {types} expected, but {curr} found')
-        return True
+def expect(state, types):
+    found = curr_type(state) in types
+    if not found:
+        raise Exception(f'One of {types} expected, but {curr(state)} found')
+    return True
 
-def is_curr(state, *types):
-    return any(curr(state).get(token_type, None) is not None for token_type in types)
-def next(state):
+def is_curr(state, types):
+    return curr_type(state) in types
+
+def next_token(state):
     state["i"] += 1
 
 def curr(state):
     if state["i"] >= len(state["tokens"]):
-        return {'eof': '\0'}
+        return {"type": 'eof', "value": '\0'}
     else:
         return state["tokens"][state["i"]]
 
+def curr_type(state):
+    return curr(state)["type"]
+
 def curr_value(state):
-    if state.i >= len(state["tokens"]):
-        return '\0'
-    else:
-        return next(iter(state["tokens"][state["i"]].values()))
+    return curr(state)["value"]
+
 def parse(s):
     state = {
         "i": 0,
         "tokens": tokenize(s),
         "output": ""
     }
+    expression(state)
 
 def expression(state):
-    expect(state, 'function', 'paren', 'number', 'variable')
+    expect(state, {'function', 'paren', 'number', 'variable'})
     pass
 
 def func_term(state):
-    expect(state, 'function', 'die', 'paren', 'number', 'variable')
+    expect(state, {'function', 'die', 'paren', 'number', 'variable'})
     pass
 
 def add_term(state):
-    expect(state, 'paren', 'die', 'number', 'variable')
+    expect(state, {'paren', 'die', 'number', 'variable'})
     pass
 
 def mul_term(state):
-    expect(state, 'paren', 'die', 'number', 'variable')
+    expect(state, {'paren', 'die', 'number', 'variable'})
     pass
 
 def die_term(state):
-    expect(state, 'paren', 'die', 'number', 'variable')
+    expect(state, {'paren', 'die', 'number', 'variable'})
     pass
 
 def factor(state):
@@ -59,3 +62,5 @@ def factor(state):
 # mul_term   = die_term{mul_op die_term}
 # die_term   = factor["d"factor]|"d"factor
 # factor     = "("expression")"|number|variable
+
+parse('A+2')
