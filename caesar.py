@@ -3,7 +3,8 @@ from discord.ext import commands
 from dotenv import load_dotenv
 import os
 import random
-from customParser import Parser
+from tokenParser import parse
+from tokenizer import tokenize
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 
@@ -17,7 +18,7 @@ async def roll(ctx, *roll):
     print(''.join(roll))
     result = ''
     try:
-        result = Parser().parse(''.join(roll))
+        result = parse(''.join(roll))
     except:
         result = 'Alea iacta est - non'
     await ctx.send(f'{ctx.author.mention} {result}')
