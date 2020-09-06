@@ -56,7 +56,7 @@ async def gurps(ctx, *args):
         roll += mod 
     result = f'Rolls: {{{", ".join(map(str, rolls))}}}'
     if mod:
-        result += f' {"+" if mod >= 0 else "-"} {mod}'
+        result += f' {"+" if mod >= 0 else "-"} {abs(mod)}'
     result += f' = {roll}'
     result += f'\n{"Beaten" if roll < goal else "Lost"} by: {abs(roll-goal)}'
     print(result)
