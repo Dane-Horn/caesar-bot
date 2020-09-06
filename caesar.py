@@ -43,12 +43,13 @@ Failures: {len(list(filter(lambda r: r <= 3, rolls)))}
 
 @bot.command(name='g')
 async def gurps(ctx, *args):
-    goal = mod = None
+    goal = None
+    mod = 0
     if len(args) >= 2:
         goal = int(args[0])
         mod = int(args[1])
     else:
-        goal = args[0]
+        goal = int(args[0])
     rolls = [random.randint(1, 6) for _ in range(3)]
     roll = sum(rolls)
     if mod:
