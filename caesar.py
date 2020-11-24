@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 import os
-from modules import roll, pokerole, gurps, summon
+from modules import roll, pokerole, gurps
 from bot import bot
 
 load_dotenv()
