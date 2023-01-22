@@ -90,14 +90,18 @@ def roll_expression(state, out=True):
     expect(state, {'eof'})
     return value
 
-# expression = func_term
+# expression = add_term
+# add_term   = mul_term{add_op mul_term}
+# mul_term   = die_term{mul_op die_term}
+# die_term   = "d"factor|factor["d"factor]
+# factor     = "("expression")"|function"("[expression{","expression}]")"|number|variable
 def expression(state, out=True):
     expect(state, {'function', 'die', 'lparen', 'number', 'variable'})
     value = add_term(state, out)
     return value
 
 
-# add_term   = mul_term{add_op mul_term}
+
 def add_term(state, out=True):
     expect(state, {'function', 'lparen', 'die', 'number', 'variable'})
     value = mul_term(state, out)
@@ -109,7 +113,7 @@ def add_term(state, out=True):
         value = add_ops[op](value, second_value)
     return value
 
-# mul_term   = die_term{mul_op die_term}
+
 def mul_term(state, out=True):
     expect(state, {'function', 'lparen', 'die', 'number', 'variable'})
     value = die_term(state, out)
@@ -120,7 +124,7 @@ def mul_term(state, out=True):
         value = mul_ops[op](value, second_value)
     return value
 
-# die_term   = "d"factor|factor["d"factor]
+
 def die_term(state, out=True):
     value = None
     expect(state, {'function', 'lparen', 'die', 'number', 'variable'})
@@ -141,7 +145,7 @@ def die_term(state, out=True):
             output(state, out, f'{{{stringify_rolls(rolls)} = {value}}}')
     return value
 
-# factor     = "("expression")"|function"("[expression{","expression}"])"|number|variable
+
 # ignoring variable functionality for now
 def factor(state, out=True):
     expect(state, {'function', 'lparen', 'number'})
